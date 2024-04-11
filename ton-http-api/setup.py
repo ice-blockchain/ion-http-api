@@ -40,7 +40,7 @@ setup(
          "Topic :: Software Development :: Libraries"
     ],
     url="https://github.com/toncenter/ton-http-api",
-    description="HTTP API for TON (The Open Network)",
+    description="HTTP API for ION (The ICE Open Network)",
     long_description_content_type="text/markdown",
     long_description=long_description,
     entry_points={

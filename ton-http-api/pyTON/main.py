@@ -59,7 +59,7 @@ inject.configure_once(main_config)
 
 # main service
 description = """
-This API enables HTTP access to TON blockchain - getting accounts and wallets information, looking up blocks and transactions, sending messages to the blockchain, calling get methods of smart contracts, and more.
+This API enables HTTP access to ION blockchain - getting accounts and wallets information, looking up blocks and transactions, sending messages to the blockchain, calling get methods of smart contracts, and more.
 
 In addition to REST API, all methods are available through [JSON-RPC endpoint](#json%20rpc)  with `method` equal to method name and `params` passed as a dictionary.
 
@@ -102,7 +102,7 @@ tags_metadata = [
 settings = inject.instance(Settings)
 
 app = FastAPI(
-    title="TON HTTP API",
+    title="ION HTTP API",
     description=description,
     version='2.0.0',
     docs_url='/',
@@ -253,7 +253,7 @@ async def get_worker_state():
 @json_rpc('getAddressInformation')
 @wrap_result
 async def get_address_information(
-    address: str = Query(..., description="Identifier of target TON account in any form.")
+    address: str = Query(..., description="Identifier of target ION account in any form.")
     ):
     """
     Get basic information about the address: balance, code, data, last_transaction_id.
@@ -269,7 +269,7 @@ async def get_address_information(
 @json_rpc('getExtendedAddressInformation')
 @wrap_result
 async def get_extended_address_information(
-    address: str = Query(..., description="Identifier of target TON account in any form.")
+    address: str = Query(..., description="Identifier of target ION account in any form.")
     ):
     """
     Similar to previous one but tries to parse additional information for known contract types. This method is based on tonlib's function *getAccountState*. For detecting wallets we recommend to use *getWalletInformation*.
@@ -282,7 +282,7 @@ async def get_extended_address_information(
 @json_rpc('getWalletInformation')
 @wrap_result
 async def get_wallet_information(
-    address: str = Query(..., description="Identifier of target TON account in any form.")
+    address: str = Query(..., description="Identifier of target ION account in any form.")
     ):
     """
     Retrieve wallet information. This method parses contract state and currently supports more wallet types than getExtendedAddressInformation: simple wallet, standart wallet, v3 wallet, v4 wallet.
@@ -306,7 +306,7 @@ async def get_wallet_information(
 @json_rpc('getTransactions')
 @wrap_result
 async def get_transactions(
-    address: str = Query(..., description="Identifier of target TON account in any form."), 
+    address: str = Query(..., description="Identifier of target ION account in any form."),
     limit: Optional[int] = Query(default=10, description="Maximum number of transactions in response.", gt=0, le=100), 
     lt: Optional[int] = Query(default=None, description="Logical time of transaction to start with, must be sent with *hash*."), 
     hash: Optional[str] = Query(default=None, description="Hash of transaction to start with, in *base64* or *hex* encoding , must be sent with *lt*."), 
@@ -323,7 +323,7 @@ async def get_transactions(
 @json_rpc('getAddressBalance')
 @wrap_result
 async def get_address_balance(
-    address: str = Query(..., description="Identifier of target TON account in any form.")
+    address: str = Query(..., description="Identifier of target ION account in any form.")
     ):
     """
     Get balance (in nanotons) of a given address.
@@ -338,7 +338,7 @@ async def get_address_balance(
 @json_rpc('getAddressState')
 @wrap_result
 async def get_address(
-    address: str = Query(..., description="Identifier of target TON account in any form.")
+    address: str = Query(..., description="Identifier of target ION account in any form.")
     ):
     """
     Get state of a given address. State can be either *unitialized*, *active* or *frozen*.
@@ -351,7 +351,7 @@ async def get_address(
 @json_rpc('packAddress')
 @wrap_result
 async def pack_address(
-    address: str = Query(..., description="Identifier of target TON account in raw form.", example="0:83DFD552E63729B472FCBCC8C45EBCC6691702558B68EC7527E1BA403A0F31A8")
+    address: str = Query(..., description="Identifier of target ION account in raw form.", example="0:83DFD552E63729B472FCBCC8C45EBCC6691702558B68EC7527E1BA403A0F31A8")
     ):
     """
     Convert an address from raw to human-readable format.
@@ -362,7 +362,7 @@ async def pack_address(
 @json_rpc('unpackAddress')
 @wrap_result
 async def unpack_address(
-    address: str = Query(..., description="Identifier of target TON account in user-friendly form", example="EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N")
+    address: str = Query(..., description="Identifier of target ION account in user-friendly form", example="EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N")
     ):
     """
     Convert an address from human-readable to raw format.
@@ -538,7 +538,7 @@ async def get_try_locate_source_tx(
 @json_rpc('detectAddress')
 @wrap_result
 async def detect_address(
-    address: str = Query(..., description="Identifier of target TON account in any form.")
+    address: str = Query(..., description="Identifier of target ION account in any form.")
     ):
     """
     Get all possible address forms.

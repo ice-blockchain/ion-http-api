@@ -2,9 +2,9 @@
 
 # HTTP API for [The Open Network](https://ton.org)
 
-Since TON nodes uses its own ADNL binary transport protocol, a intermediate service is needed for an HTTP connection.
+Since ION nodes uses its own ADNL binary transport protocol, a intermediate service is needed for an HTTP connection.
 
-TON HTTP API is such a intermediate service, receiving requests via HTTP, it accesses the lite servers of the TON network using `tonlibjson`.
+ION HTTP API is such a intermediate service, receiving requests via HTTP, it accesses the lite servers of the ION network using `tonlibjson`.
 
 You can use the ready-made [toncenter.com](https://toncenter.com) service or start your own instance.
 
@@ -15,7 +15,7 @@ Recommended hardware:
 - HTTP API only: 1 vCPU, 2 GB RAM.
 - HTTP API with cache enabled: 2 vCPUs, 4 GB RAM.
 
-There are two main ways to run TON HTTP API:
+There are two main ways to run ION HTTP API:
 - __Local__ *(experimental)*: works on following platforms: Ubuntu Linux (x86_64, arm64), MacOSX (Intel x86_64, Apple M1 arm64) and Windows (x86_64). 
 - __Docker Compose__: flexible configuration, recommended for production environments, works on any x86_64 and arm64 OS with Docker available.
 
@@ -31,7 +31,7 @@ There are two main ways to run TON HTTP API:
     - For Ubuntu: run `scripts/setup.sh` from the root of the repo.
     - For MacOS and Windows: install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
     - **Note:** we recommend to use Docker Compose V2.
-  - Download TON configuration files to private folder:
+  - Download ION configuration files to private folder:
     ```bash
     mkdir private
     curl -sL https://ton-blockchain.github.io/global.config.json > private/mainnet.json
