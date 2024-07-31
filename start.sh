@@ -1,7 +1,12 @@
 #!/bin/bash
 
 mkdir private
-curl -sL https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json > private/ion-testnet-global.config.json
+
+# v.1.0
+# curl -sL https://raw.githubusercontent.com/ice-blockchain/ion-controller/ion-fork/config/ion-testnet-global.config.json > private/ion-testnet-global.config.json
+
+# v.2.0
+cp /usr/bin/ion/global.config.json private/ion-testnet-global.config.json
 
 ./configure.py
 
