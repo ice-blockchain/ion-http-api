@@ -141,6 +141,16 @@ async def startup():
 
     await asyncio.sleep(2) # wait for manager to spawn all workers and report their status
 
+# New function to run startup and keep the event loop running
+# async def debug_startup():
+#     await startup()
+#     while True:
+#         await asyncio.sleep(3600)  # Keep the event loop running
+#
+# Main execution
+# if __name__ == "__main__":
+#     asyncio.run(debug_startup())
+
 @app.on_event("shutdown")
 async def shutdown_event():
     await tonlib.shutdown()
