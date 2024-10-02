@@ -178,7 +178,11 @@ class TonlibWorker(mp.Process):
         await self.loop.run_in_executor(self.threadpool_executor, self.output_queue.put, (TonlibWorkerMsgType.TASK_RESULT, tonlib_task_result))
 
     async def sync_tonlib(self):
-        await self.tonlib.sync_tonlib()
+
+        try:
+            await self.tonlib.sync_tonlib()
+        except BlockNotFound as e:
+            print("pyTON.worker.sync_tonlib", e)
 
         while not self.exit_event.is_set():
             await asyncio.sleep(1)
