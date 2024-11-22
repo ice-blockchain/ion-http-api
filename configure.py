@@ -14,7 +14,7 @@ LOCAL_ENV = {
     'TON_API_GET_METHODS_ENABLED': '1',
     'TON_API_HTTP_PORT': '80',
     'TON_API_JSON_RPC_ENABLED': '1',
-    'TON_API_ROOT_PATH': '/',
+    'TON_API_ROOT_PATH': '/http/v2/',
     'TON_API_WEBSERVERS_WORKERS': '1',
     'TON_API_TONLIB_LITESERVER_CONFIG': 'private/mainnet.json',
     'TON_API_TONLIB_KEYSTORE': '/tmp/ton_keystore/',
