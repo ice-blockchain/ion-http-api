@@ -108,13 +108,14 @@ app = FastAPI(
     title="ION HTTP API",
     description=description,
     version=pkg_version,
-    docs_url='/',
+    docs_url='/http/v2',
     responses={
         422: {'description': 'Validation Error'},
         504: {'description': 'Lite Server Timeout'}
     },
     root_path=settings.webserver.api_root_path,
-    openapi_tags=tags_metadata
+    openapi_tags=tags_metadata,
+    openapi_url=f"/http/v2/openapi.json",
 )
 
 app.add_middleware(
@@ -273,18 +274,22 @@ def json_rpc(method):
     return g
 
 # Endpoints
+@app.get("/http/v2/debug-root", include_in_schema=False)
+async def debug_root(request: Request):
+    return {"root_path": request.scope.get("root_path")}
+
 @app.get('/healthcheck', include_in_schema=False)
 async def healthcheck():
     return 'OK'
 
 
-@app.get('/getWorkerState', response_model=TonResponse, include_in_schema=False)
+@app.get('/http/v2/getWorkerState', response_model=TonResponse, include_in_schema=False)
 @wrap_result
 async def get_worker_state():
     return tonlib.get_workers_state()
 
 
-@app.get('/getAddressInformation', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/getAddressInformation', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('getAddressInformation')
 @wrap_result
 async def get_address_information(
@@ -301,7 +306,7 @@ async def get_address_information(
         result["balance"] = 0
     return result
 
-@app.get('/getExtendedAddressInformation', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/getExtendedAddressInformation', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('getExtendedAddressInformation')
 @wrap_result
 async def get_extended_address_information(
@@ -315,7 +320,7 @@ async def get_extended_address_information(
     result = await tonlib.generic_get_account_state(address, seqno)
     return result
 
-@app.get('/getWalletInformation', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/getWalletInformation', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('getWalletInformation')
 @wrap_result
 async def get_wallet_information(
@@ -341,7 +346,7 @@ async def get_wallet_information(
         wallet_handler["data_extractor"](res, result)
     return res
 
-@app.get('/getTransactions', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts', 'transactions'])
+@app.get('/http/v2/getTransactions', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts', 'transactions'])
 @json_rpc('getTransactions')
 @wrap_result
 async def get_transactions(
@@ -358,7 +363,7 @@ async def get_transactions(
     address = prepare_address(address)
     return await tonlib.get_transactions(address, from_transaction_lt=lt, from_transaction_hash=hash, to_transaction_lt=to_lt, limit=limit, archival=archival)
 
-@app.get('/getAddressBalance', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/getAddressBalance', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('getAddressBalance')
 @wrap_result
 async def get_address_balance(
@@ -374,7 +379,7 @@ async def get_address_balance(
         result["balance"] = 0
     return result["balance"]
 
-@app.get('/getAddressState', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/getAddressState', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('getAddressState')
 @wrap_result
 async def get_address(
@@ -388,7 +393,7 @@ async def get_address(
     result = await tonlib.raw_get_account_state(address, seqno)
     return address_state(result)
 
-@app.get('/packAddress', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/packAddress', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('packAddress')
 @wrap_result
 async def pack_address(
@@ -399,7 +404,7 @@ async def pack_address(
     """
     return prepare_address(address)
 
-@app.get('/unpackAddress', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/unpackAddress', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('unpackAddress')
 @wrap_result
 async def unpack_address(
@@ -410,7 +415,7 @@ async def unpack_address(
     """
     return _detect_address(address)["raw_form"]
 
-@app.get('/getMasterchainInfo', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
+@app.get('/http/v2/getMasterchainInfo', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
 @json_rpc('getMasterchainInfo')
 @wrap_result
 async def get_masterchain_info():
@@ -419,7 +424,7 @@ async def get_masterchain_info():
     """
     return await tonlib.getMasterchainInfo()
 
-@app.get('/getMasterchainBlockSignatures', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
+@app.get('/http/v2/getMasterchainBlockSignatures', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
 @json_rpc('getMasterchainBlockSignatures')
 @wrap_result
 async def get_masterchain_block_signatures(
@@ -430,7 +435,7 @@ async def get_masterchain_block_signatures(
     """
     return await tonlib.getMasterchainBlockSignatures(seqno)
 
-@app.get('/getShardBlockProof', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
+@app.get('/http/v2/getShardBlockProof', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
 @json_rpc('getShardBlockProof')
 @wrap_result
 async def get_shard_block_proof(
@@ -444,7 +449,7 @@ async def get_shard_block_proof(
     """
     return await tonlib.getShardBlockProof(workchain, shard, seqno, from_seqno)
 
-@app.get('/getConsensusBlock', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
+@app.get('/http/v2/getConsensusBlock', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
 @json_rpc('getConsensusBlock')
 @wrap_result
 async def get_consensus_block():
@@ -453,7 +458,7 @@ async def get_consensus_block():
     """
     return await tonlib.getConsensusBlock()
 
-@app.get('/lookupBlock', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
+@app.get('/http/v2/lookupBlock', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
 @json_rpc('lookupBlock')
 @wrap_result
 async def lookup_block(
@@ -468,7 +473,7 @@ async def lookup_block(
     """
     return await tonlib.lookupBlock(workchain, shard, seqno, lt, unixtime)
 
-@app.get('/shards', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
+@app.get('/http/v2/shards', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
 @json_rpc('shards')
 @wrap_result
 async def shards(
@@ -479,7 +484,7 @@ async def shards(
     """
     return await tonlib.getShards(seqno)
 
-@app.get('/getBlockTransactions', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks','transactions'])
+@app.get('/http/v2/getBlockTransactions', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks','transactions'])
 @json_rpc('getBlockTransactions')
 @wrap_result
 async def get_block_transactions(
@@ -500,7 +505,7 @@ async def get_block_transactions(
     after_hash = prepare_hash(after_hash)
     return await tonlib.getBlockTransactions(workchain, shard, seqno, count, root_hash, file_hash, after_lt, after_hash)
 
-@app.get('/getBlockTransactionsExt', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks','transactions'])
+@app.get('/http/v2/getBlockTransactionsExt', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks','transactions'])
 @json_rpc('getBlockTransactionsExt')
 @wrap_result
 async def get_block_transactions_ext(
@@ -521,7 +526,7 @@ async def get_block_transactions_ext(
     after_hash = prepare_hash(after_hash)
     return await tonlib.getBlockTransactionsExt(workchain, shard, seqno, count, root_hash, file_hash, after_lt, after_hash)
 
-@app.get('/getBlockHeader', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
+@app.get('/http/v2/getBlockHeader', response_model=TonResponse, response_model_exclude_none=True, tags=['blocks'])
 @json_rpc('getBlockHeader')
 @wrap_result
 async def get_block_header(
@@ -538,7 +543,7 @@ async def get_block_header(
     file_hash = prepare_hash(file_hash)
     return await tonlib.getBlockHeader(workchain, shard, seqno, root_hash, file_hash)
 
-@app.get('/getConfigParam', response_model=TonResponse, response_model_exclude_none=True, tags=['get config'])
+@app.get('/http/v2/getConfigParam', response_model=TonResponse, response_model_exclude_none=True, tags=['get config'])
 @json_rpc('getConfigParam')
 @wrap_result
 async def get_config_param(
@@ -551,7 +556,7 @@ async def get_config_param(
     return await tonlib.get_config_param(config_id, seqno)
 
 
-@app.get('/getLibraries', response_model=TonResponse, response_model_exclude_none=True, tags=['get config'])
+@app.get('/http/v2/getLibraries', response_model=TonResponse, response_model_exclude_none=True, tags=['get config'])
 @json_rpc('getLibraries')
 @wrap_result
 async def get_libraries(
@@ -563,7 +568,7 @@ async def get_libraries(
     lib_hashes = [hex_to_b64str(hash_to_hex(l)) for l in libraries]
     return await tonlib.getLibraries(lib_hashes)
 
-@app.get('/getTokenData', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/getTokenData', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('getTokenData')
 @wrap_result
 async def get_token_data(
@@ -575,7 +580,7 @@ async def get_token_data(
     address = prepare_address(address)
     return await tonlib.get_token_data(address)
 
-@app.get('/tryLocateTx', response_model=TonResponse, response_model_exclude_none=True, tags=['transactions'])
+@app.get('/http/v2/tryLocateTx', response_model=TonResponse, response_model_exclude_none=True, tags=['transactions'])
 @json_rpc('tryLocateTx')
 @wrap_result
 async def get_try_locate_tx(
@@ -588,7 +593,7 @@ async def get_try_locate_tx(
     """
     return await tonlib.tryLocateTxByIncomingMessage(source, destination, created_lt)
 
-@app.get('/tryLocateResultTx', response_model=TonResponse, response_model_exclude_none=True, tags=['transactions'])
+@app.get('/http/v2/tryLocateResultTx', response_model=TonResponse, response_model_exclude_none=True, tags=['transactions'])
 @json_rpc('tryLocateResultTx')
 @wrap_result
 async def get_try_locate_result_tx(
@@ -601,7 +606,7 @@ async def get_try_locate_result_tx(
     """
     return await tonlib.tryLocateTxByIncomingMessage(source, destination, created_lt)
 
-@app.get('/tryLocateSourceTx', response_model=TonResponse, response_model_exclude_none=True, tags=['transactions'])
+@app.get('/http/v2/tryLocateSourceTx', response_model=TonResponse, response_model_exclude_none=True, tags=['transactions'])
 @json_rpc('tryLocateSourceTx')
 @wrap_result
 async def get_try_locate_source_tx(
@@ -614,7 +619,7 @@ async def get_try_locate_source_tx(
     """
     return await tonlib.tryLocateTxByOutcomingMessage(source, destination, created_lt)
 
-@app.get('/detectAddress', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
+@app.get('/http/v2/detectAddress', response_model=TonResponse, response_model_exclude_none=True, tags=['accounts'])
 @json_rpc('detectAddress')
 @wrap_result
 async def detect_address(
@@ -625,7 +630,7 @@ async def detect_address(
     """
     return _detect_address(address)
 
-@app.post('/sendBoc', response_model=TonResponse, response_model_exclude_none=True, tags=['send'])
+@app.post('/http/v2/sendBoc', response_model=TonResponse, response_model_exclude_none=True, tags=['send'])
 @json_rpc('sendBoc')
 @wrap_result
 async def send_boc(
@@ -637,7 +642,7 @@ async def send_boc(
     boc = base64.b64decode(boc)
     return await tonlib.raw_send_message(boc)
 
-@app.post('/sendBocReturnHash', response_model=TonResponse, response_model_exclude_none=True, tags=['send'])
+@app.post('/http/v2/sendBocReturnHash', response_model=TonResponse, response_model_exclude_none=True, tags=['send'])
 @json_rpc('sendBocReturnHash')
 @wrap_result
 async def send_boc_return_hash(
@@ -659,7 +664,7 @@ async def send_boc_unsafe_task(boc_bytes: bytes):
             pass
         await asyncio.sleep(send_interval)
 
-@app.post('/sendBocUnsafe', response_model=TonResponse, response_model_exclude_none=True, include_in_schema=False, tags=['send'])
+@app.post('/http/v2/sendBocUnsafe', response_model=TonResponse, response_model_exclude_none=True, include_in_schema=False, tags=['send'])
 @json_rpc('sendBocUnsafe')
 @wrap_result
 async def send_boc_unsafe(
@@ -674,7 +679,7 @@ async def send_boc_unsafe(
     background_tasks.add_task(send_boc_unsafe_task, boc)
     return {'@type': 'ok', '@extra': '0:0:0'}
 
-@app.post('/sendCellSimple', response_model=TonResponse, response_model_exclude_none=True, include_in_schema=False, tags=['send'])
+@app.post('/http/v2/sendCellSimple', response_model=TonResponse, response_model_exclude_none=True, include_in_schema=False, tags=['send'])
 @json_rpc('sendCellSimple')
 @wrap_result
 async def send_cell(
@@ -690,7 +695,7 @@ async def send_cell(
         raise HTTPException(status_code=400, detail="Error while parsing cell")
     return await tonlib.raw_send_message(boc)
 
-@app.post('/sendQuery', response_model=TonResponse, response_model_exclude_none=True, tags=['send'])
+@app.post('/http/v2/sendQuery', response_model=TonResponse, response_model_exclude_none=True, tags=['send'])
 @json_rpc('sendQuery')
 @wrap_result
 async def send_query(
@@ -708,7 +713,7 @@ async def send_query(
     data = codecs.decode(codecs.encode(init_data, "utf-8"), 'base64')
     return await tonlib.raw_create_and_send_query(address, body, init_code=code, init_data=data)
 
-@app.post('/sendQuerySimple', response_model=TonResponse, response_model_exclude_none=True, include_in_schema=False, tags=['send'])
+@app.post('/http/v2/sendQuerySimple', response_model=TonResponse, response_model_exclude_none=True, include_in_schema=False, tags=['send'])
 @json_rpc('sendQuerySimple')
 @wrap_result
 async def send_query_cell(
@@ -732,7 +737,7 @@ async def send_query_cell(
         raise HTTPException(status_code=400, detail="Error while parsing cell object")
     return await tonlib.raw_create_and_send_query(address, body, init_code=qcode, init_data=qdata)
 
-@app.post('/estimateFee', response_model=TonResponse, response_model_exclude_none=True, tags=['send'])
+@app.post('/http/v2/estimateFee', response_model=TonResponse, response_model_exclude_none=True, tags=['send'])
 @json_rpc('estimateFee')
 @wrap_result
 async def estimate_fee(
@@ -751,7 +756,7 @@ async def estimate_fee(
     data = codecs.decode(codecs.encode(init_data, "utf-8"), 'base64')
     return await tonlib.raw_estimate_fees(address, body, init_code=code, init_data=data, ignore_chksig=ignore_chksig)
 
-@app.post('/estimateFeeSimple', response_model=TonResponse, response_model_exclude_none=True, include_in_schema=False, tags=['send'])
+@app.post('/http/v2/estimateFeeSimple', response_model=TonResponse, response_model_exclude_none=True, include_in_schema=False, tags=['send'])
 @json_rpc('estimateFeeSimple')
 @wrap_result
 async def estimate_fee_cell(
@@ -778,7 +783,7 @@ async def estimate_fee_cell(
 
 
 if settings.webserver.get_methods:
-    @app.post('/runGetMethod', response_model=TonResponse, response_model_exclude_none=True, tags=["run method"])
+    @app.post('/http/v2/runGetMethod', response_model=TonResponse, response_model_exclude_none=True, tags=["run method"])
     @json_rpc('runGetMethod')
     @wrap_result
     async def run_get_method(
@@ -795,7 +800,7 @@ if settings.webserver.get_methods:
 
 
 if settings.webserver.json_rpc:
-    @app.post('/jsonRPC', response_model=TonResponseJsonRPC, response_model_exclude_none=True, tags=['json rpc'])
+    @app.post('/http/v2/jsonRPC', response_model=TonResponseJsonRPC, response_model_exclude_none=True, tags=['json rpc'])
     async def jsonrpc_handler(json_rpc: TonRequestJsonRPC, request: Request, response: Response, background_tasks: BackgroundTasks):
         """
         All methods in the API are available through JSON-RPC protocol ([spec](https://www.jsonrpc.org/specification)). 
