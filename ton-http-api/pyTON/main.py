@@ -105,7 +105,7 @@ app = FastAPI(
     title="ION HTTP API",
     description=description,
     version='2.0.0',
-    docs_url='/http/v2',
+    docs_url='/http/v2/',
     responses={
         422: {'description': 'Validation Error'},
         504: {'description': 'Lite Server Timeout'}
@@ -253,7 +253,7 @@ def json_rpc(method):
 async def debug_root(request: Request):
     return {"root_path": request.scope.get("root_path")}
 
-@app.get('/healthcheck', include_in_schema=False)
+@app.get('/http/v2/healthcheck', include_in_schema=False)
 async def healthcheck():
     return 'OK'
 
