@@ -136,6 +136,7 @@ To point the HTTP API to your own lite server you should set `TON_API_TONLIB_LIT
     ```
     python -c 'import codecs; f=open("liteserver.pub", "rb+"); pub=f.read()[4:]; print(str(codecs.encode(pub,"base64")).replace("\n",""))'
     ```
+- The config generated with `mytonctrl` > `installer` > `clcf` adds the public IP of your server in the config file. If there's an active firewall on your server, `ton-http-api` won't be able to connect to the local lite server. In that case, replace the value of lite server's `ip` in `local.config.json` with `2130706433`, which is the integer equivalent of `127.0.0.1` / `localhost`.
 - Once config file is created assign variable `TON_API_TONLIB_LITESERVER_CONFIG` to its path, run `./configure.py` and rebuild the project.
 
 #### How to run multiple API instances on single machine?
@@ -149,3 +150,8 @@ To point the HTTP API to your own lite server you should set `TON_API_TONLIB_LIT
 Binary file `libtonlibjson` now moved to [pytonlib](https://github.com/toncenter/pytonlib). 
 - Docker Compose: `docker-compose build --no-cache`.
 - Local run: `pip install -U ton-http-api`.
+
+### No working liteservers error.
+
+Usually, liteservers from the config has already deleted the block, which specified in `init_block` section.
+To update init block, please **backup your config file** and run script `./scripts/update_init_block.sh private/mainnet.json`. For testnet add flag `--testnet`.
