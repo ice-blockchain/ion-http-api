@@ -9,10 +9,10 @@ from collections.abc import Mapping
 from copy import deepcopy
 from concurrent.futures import ThreadPoolExecutor
 
-from pyTON.worker import TonlibWorker
-from pyTON.models import TonlibWorkerMsgType, TonlibClientResult, ConsensusBlock
-from pyTON.cache import CacheManager, DisabledCacheManager
-from pyTON.settings import TonlibSettings
+from pyION.worker import TonlibWorker
+from pyION.models import TonlibWorkerMsgType, TonlibClientResult, ConsensusBlock
+from pyION.cache import CacheManager, DisabledCacheManager
+from pyION.settings import TonlibSettings
 
 from pytonlib import TonlibError
 

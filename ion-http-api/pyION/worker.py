@@ -5,8 +5,8 @@ import time
 import queue
 import multiprocessing as mp
 
-from pyTON.settings import TonlibSettings
-from pyTON.models import TonlibWorkerMsgType, TonlibClientResult
+from pyION.settings import TonlibSettings
+from pyION.models import TonlibWorkerMsgType, TonlibClientResult
 from pytonlib import TonlibClient, TonlibException, BlockNotFound
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor

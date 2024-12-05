@@ -7,12 +7,12 @@ from os.path import dirname, join, pardir
 with open(join(dirname(__file__), "README.md"), "r") as f:
     long_description = f.read()
 
-version = os.environ.get('TON_HTTP_API_VERSION', '0.0.0')
+version = os.environ.get('ION_HTTP_API_VERSION', '0.0.0')
 
 setup(
     author='K-Dimentional Tree',
     author_email='kdimentionaltree@gmail.com',
-    name='ton-http-api',
+    name='ion-http-api',
     version=version,
     packages=find_packages('.', exclude=['tests']),
     install_requires=[
@@ -39,13 +39,13 @@ setup(
          "License :: Other/Proprietary License",
          "Topic :: Software Development :: Libraries"
     ],
-    url="https://github.com/toncenter/ton-http-api",
-    description="HTTP API for TON (The Open Network)",
+    url="https://github.com/ice-blockchain/ion-http-api",
+    description="HTTP API for ION (Ice Open Network)",
     long_description_content_type="text/markdown",
     long_description=long_description,
     entry_points={
         'console_scripts': [
-            'ton-http-api = pyTON.__main__:main'
+            'ion-http-api = pyION.__main__:main'
         ]
     }
 )

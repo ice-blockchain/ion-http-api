@@ -1,40 +1,40 @@
 version: '3.7'
 services:
   main:
-    image: toncenter/ton-http-api
+    image: ice-blockchain/ion-http-api
     build: 
-      context: ton-http-api
+      context: ion-http-api
       dockerfile: .docker/Dockerfile
     ports:
-      - ${TON_API_HTTP_PORT:-8081}:8081
+      - ${ION_API_HTTP_PORT:-8081}:8081
     environment:
-      - TON_API_CACHE_ENABLED
-      - TON_API_CACHE_REDIS_ENDPOINT
-      - TON_API_CACHE_REDIS_PORT
-      - TON_API_CACHE_REDIS_TIMEOUT
-      - TON_API_LOGS_JSONIFY
-      - TON_API_LOGS_LEVEL
-      - TON_API_TONLIB_LITESERVER_CONFIG=/run/secrets/liteserver_config
-      - TON_API_TONLIB_KEYSTORE
-      - TON_API_TONLIB_PARALLEL_REQUESTS_PER_LITESERVER
-      - TON_API_TONLIB_CDLL_PATH
-      - TON_API_TONLIB_REQUEST_TIMEOUT
-      - TON_API_GET_METHODS_ENABLED
-      - TON_API_JSON_RPC_ENABLED
-      - TON_API_ROOT_PATH
+      - ION_API_CACHE_ENABLED
+      - ION_API_CACHE_REDIS_ENDPOINT
+      - ION_API_CACHE_REDIS_PORT
+      - ION_API_CACHE_REDIS_TIMEOUT
+      - ION_API_LOGS_JSONIFY
+      - ION_API_LOGS_LEVEL
+      - ION_API_TONLIB_LITESERVER_CONFIG=/run/secrets/liteserver_config
+      - ION_API_TONLIB_KEYSTORE
+      - ION_API_TONLIB_PARALLEL_REQUESTS_PER_LITESERVER
+      - ION_API_TONLIB_CDLL_PATH
+      - ION_API_TONLIB_REQUEST_TIMEOUT
+      - ION_API_GET_METHODS_ENABLED
+      - ION_API_JSON_RPC_ENABLED
+      - ION_API_ROOT_PATH
     restart: unless-stopped
     networks:
       - internal
     secrets:
       - liteserver_config
-    command: -c "gunicorn -k uvicorn.workers.UvicornWorker -w ${TON_API_WEBSERVERS_WORKERS} --bind 0.0.0.0:8081 ${TON_API_GUNICORN_FLAGS} pyTON.main:app"
+    command: -c "gunicorn -k uvicorn.workers.UvicornWorker -w ${ION_API_WEBSERVERS_WORKERS} --bind 0.0.0.0:8081 ${ION_API_GUNICORN_FLAGS} pyION.main:app"
     healthcheck:
-      test: curl -sS http://127.0.0.1:8081${TON_API_ROOT_PATH}/healthcheck || echo 1
+      test: curl -sS http://127.0.0.1:8081${ION_API_ROOT_PATH}/healthcheck || echo 1
       interval: 15s
       timeout: 3s
       retries: 12
 secrets:
   liteserver_config:
-    file: ${TON_API_TONLIB_LITESERVER_CONFIG:-./private/mainnet.json}
+    file: ${ION_API_TONLIB_LITESERVER_CONFIG:-./private/mainnet.json}
 networks:
   internal:

@@ -2,7 +2,7 @@ import redis.asyncio
 import ring
 
 from ring.func.asyncio import Aioredis2Storage
-from pyTON.settings import RedisCacheSettings
+from pyION.settings import RedisCacheSettings
 
 
 class TonlibResultRedisStorage(Aioredis2Storage):

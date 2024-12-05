@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENDPOINT=https://toncenter.com/api/v2
+ENDPOINT=https://api.mainnet.ice.io/http/v2
 
 
 function usage() {
@@ -18,7 +18,7 @@ while [[ $# -gt 0 ]]; do
             exit 1
             ;;
         --testnet)
-            ENDPOINT=https://testnet.toncenter.com/api/v2
+            ENDPOINT=https://api.testnet.ice.io/http/v2
             shift
             ;;
         -*|--*)
