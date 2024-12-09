@@ -1,5 +1,3 @@
-![splash_http_api](https://user-images.githubusercontent.com/1449561/154847286-989a6c51-1615-45e1-b40f-aec7c13014fa.png)
-
 # HTTP API for [Ice Open Network](https://ion.org)
 
 [![PyPI](https://img.shields.io/pypi/v/ion-http-api?color=blue)](https://pypi.org/project/ion-http-api/)
