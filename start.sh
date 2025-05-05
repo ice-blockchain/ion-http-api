@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# mkdir private
-# curl -sL http://94.100.16.219/configs/global.config.json > private/ion-testnet-global.config.json
+mkdir private
+curl -sL https://cdn.ice.io/mainnet/global.config.json > private/mainnet.json
 
 ./configure.py
 
-TON_API_TONLIB_LITESERVER_CONFIG=private/ion-testnet-global.config.json docker compose up -d --build
+docker compose up -d --build

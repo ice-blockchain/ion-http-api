@@ -1,12 +1,10 @@
-version: '3.7'
 services:
   main:
     image: toncenter/ton-http-api
+    network_mode: host
     build: 
       context: ton-http-api
       dockerfile: .docker/Dockerfile
-    ports:
-      - ${TON_API_HTTP_PORT:-8081}:8081
     environment:
       - TON_API_CACHE_ENABLED
       - TON_API_CACHE_REDIS_ENDPOINT
@@ -23,18 +21,14 @@ services:
       - TON_API_JSON_RPC_ENABLED
       - TON_API_ROOT_PATH
     restart: unless-stopped
-    networks:
-      - internal
     secrets:
       - liteserver_config
-    command: -c "gunicorn -k uvicorn.workers.UvicornWorker -w ${TON_API_WEBSERVERS_WORKERS} --bind 0.0.0.0:8081 ${TON_API_GUNICORN_FLAGS} pyTON.main:app"
+    command: -c "gunicorn -k uvicorn.workers.UvicornWorker -w ${TON_API_WEBSERVERS_WORKERS} --bind 0.0.0.0:${TON_API_HTTP_PORT} ${TON_API_GUNICORN_FLAGS} pyTON.main:app"
     healthcheck:
-      test: curl -sS http://127.0.0.1:8081${TON_API_ROOT_PATH}/healthcheck || echo 1
+      test: curl -sS http://0.0.0.0:${TON_API_HTTP_PORT}${TON_API_ROOT_PATH}/healthcheck || echo 1
       interval: 15s
       timeout: 3s
       retries: 12
 secrets:
   liteserver_config:
     file: ${TON_API_TONLIB_LITESERVER_CONFIG}
-networks:
-  internal:
