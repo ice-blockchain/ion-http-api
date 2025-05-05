@@ -5,6 +5,7 @@ services:
     build: 
       context: ton-http-api
       dockerfile: .docker/Dockerfile
+      network: host
     environment:
       - TON_API_CACHE_ENABLED
       - TON_API_CACHE_REDIS_ENDPOINT
