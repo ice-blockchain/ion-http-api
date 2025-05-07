@@ -21,7 +21,7 @@ LOCAL_ENV = {
     'TON_API_TONLIB_PARALLEL_REQUESTS_PER_LITESERVER': '50',
     'TON_API_TONLIB_CDLL_PATH': '',
     'TON_API_TONLIB_REQUEST_TIMEOUT': '10',
-    'TON_API_GUNICORN_FLAGS': ''
+    'TON_API_GUNICORN_FLAGS': '"--preload --keep-alive 10 --max-requests 50000 --max-requests-jitter 5000 --worker-tmp-dir /dev/shm"'
 }
 
 
