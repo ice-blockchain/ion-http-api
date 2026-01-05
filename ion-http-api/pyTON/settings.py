@@ -37,13 +37,13 @@ class TonlibSettings:
     @classmethod
     def from_environment(cls):
         verbosity_level = 0
-        if os.environ.get('TON_API_LOGS_LEVEL') == 'DEBUG':
+        if os.environ.get('ION_API_LOGS_LEVEL') == 'DEBUG':
             verbosity_level = 4
-        return TonlibSettings(parallel_requests_per_liteserver=int(os.environ.get('TON_API_TONLIB_PARALLEL_REQUESTS_PER_LITESERVER', '50')),
-                              keystore=os.environ.get('TON_API_TONLIB_KEYSTORE', './ton_keystore/'),
-                              liteserver_config_path=os.environ.get('TON_API_TONLIB_LITESERVER_CONFIG', 'https://ton.org/global-config.json'),
-                              cdll_path=os.environ.get('TON_API_TONLIB_CDLL_PATH', None),
-                              request_timeout=int(os.environ.get('TON_API_TONLIB_REQUEST_TIMEOUT', '10')),
+        return TonlibSettings(parallel_requests_per_liteserver=int(os.environ.get('ION_API_TONLIB_PARALLEL_REQUESTS_PER_LITESERVER', '50')),
+                              keystore=os.environ.get('ION_API_TONLIB_KEYSTORE', './ion_keystore/'),
+                              liteserver_config_path=os.environ.get('ION_API_TONLIB_LITESERVER_CONFIG', 'https://cdn.ice.io/mainnet/global.config.json'),
+                              cdll_path=os.environ.get('ION_API_TONLIB_CDLL_PATH', None),
+                              request_timeout=int(os.environ.get('ION_API_TONLIB_REQUEST_TIMEOUT', '10')),
                               verbosity_level=verbosity_level)
 
 
@@ -56,9 +56,9 @@ class RedisSettings:
     @classmethod
     def from_environment(cls, settings_type):
         if settings_type == 'cache':
-            return RedisSettings(endpoint=os.environ.get('TON_API_CACHE_REDIS_ENDPOINT', 'localhost'),
-                                port=int(os.environ.get('TON_API_CACHE_REDIS_PORT', '6379')),
-                                timeout=int(os.environ.get('TON_API_CACHE_REDIS_TIMEOUT', '1')))
+            return RedisSettings(endpoint=os.environ.get('ION_API_CACHE_REDIS_ENDPOINT', 'localhost'),
+                                port=int(os.environ.get('ION_API_CACHE_REDIS_PORT', '6379')),
+                                timeout=int(os.environ.get('ION_API_CACHE_REDIS_TIMEOUT', '1')))
 
 
 @dataclass
@@ -68,8 +68,8 @@ class LoggingSettings:
 
     @classmethod
     def from_environment(cls):
-        return LoggingSettings(jsonify=strtobool(os.environ.get('TON_API_LOGS_JSONIFY', '0')),
-                               level=os.environ.get('TON_API_LOGS_LEVEL', 'WARNING'))
+        return LoggingSettings(jsonify=strtobool(os.environ.get('ION_API_LOGS_JSONIFY', '0')),
+                               level=os.environ.get('ION_API_LOGS_LEVEL', 'WARNING'))
 
 
 @dataclass
@@ -87,7 +87,7 @@ class RedisCacheSettings(CacheSettings):
 
     @classmethod
     def from_environment(cls):
-        return RedisCacheSettings(enabled=strtobool(os.environ.get('TON_API_CACHE_ENABLED', '0')),
+        return RedisCacheSettings(enabled=strtobool(os.environ.get('ION_API_CACHE_ENABLED', '0')),
                                   redis=RedisSettings.from_environment('cache'))
 
 
@@ -99,9 +99,9 @@ class WebServerSettings:
 
     @classmethod
     def from_environment(cls):
-        return WebServerSettings(api_root_path=os.environ.get('TON_API_ROOT_PATH', '/'),
-                                 get_methods=strtobool(os.environ.get('TON_API_GET_METHODS_ENABLED', '1')),
-                                 json_rpc=strtobool(os.environ.get('TON_API_JSON_RPC_ENABLED', '1')))
+        return WebServerSettings(api_root_path=os.environ.get('ION_API_ROOT_PATH', '/'),
+                                 get_methods=strtobool(os.environ.get('ION_API_GET_METHODS_ENABLED', '1')),
+                                 json_rpc=strtobool(os.environ.get('ION_API_JSON_RPC_ENABLED', '1')))
 
 
 @dataclass
@@ -113,7 +113,7 @@ class Settings:
 
     @classmethod
     def from_environment(cls):
-        cache_enabled = strtobool(os.environ.get('TON_API_CACHE_ENABLED', '0'))
+        cache_enabled = strtobool(os.environ.get('ION_API_CACHE_ENABLED', '0'))
         logging = LoggingSettings.from_environment()
         cache = (RedisCacheSettings if cache_enabled else CacheSettings).from_environment()
         return Settings(tonlib=TonlibSettings.from_environment(),
